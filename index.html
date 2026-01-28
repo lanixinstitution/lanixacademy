@@ -2,202 +2,486 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Certificate Verification - LANIX SHIPPING AND INDUSTRIAL ACADEMY</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <title>Certificate Verification | Lanix Academy</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        :root {
+            --navy: #002D62;
+            --safety-orange: #FF8C00;
+            --bg-gray: #f4f7f6;
+        }
+
         body {
-            font-family: 'Inter', sans-serif;
-            background-color: #f3f4f6;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background-color: var(--bg-gray);
+            margin: 0;
+            padding: 0;
+            color: #333;
         }
+
+        /* Branding Header */
+        header {
+            background: var(--navy);
+            color: white;
+            padding: 40px 20px;
+            text-align: center;
+            border-bottom: 5px solid var(--safety-orange);
+        }
+
+        header h1 { margin: 0; font-size: 28px; text-transform: uppercase; }
+        header p { margin: 10px 0 0; opacity: 0.9; font-weight: 300; }
+
         .container {
-            max-width: 900px;
+            max-width: 650px;
+            margin: -30px auto 50px;
+            padding: 0 15px;
         }
+
         .card {
-            background-color: white;
-            border-radius: 1.5rem;
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+
+        /* Search Section */
+        .search-area { text-align: center; margin-bottom: 20px; }
+        .search-box {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        input[type="text"] {
+            flex: 1;
+            padding: 14px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            text-transform: uppercase;
+        }
+
+        input[type="text"]:focus { border-color: var(--navy); outline: none; }
+
+        .verify-btn {
+            background: var(--navy);
+            color: white;
+            border: none;
+            padding: 14px 25px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+
+        .verify-btn:hover { background: #001a3a; }
+
+        /* Results Display */
+        #resultCard {
+            display: none;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 2px dashed #eee;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid #f9f9f9;
+        }
+
+        .label { font-weight: bold; color: #666; font-size: 14px; }
+        .value { color: var(--navy); font-weight: 700; }
+
+        .download-btn {
+            display: block;
+            background: var(--safety-orange);
+            color: white;
+            text-align: center;
+            padding: 18px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: bold;
+            margin-top: 25px;
+            transition: 0.3s;
+        }
+
+        .download-btn:hover { background: #e67e00; transform: translateY(-2px); }
+
+        /* Footer & Contact */
+        footer {
+            background: #222;
+            color: #ddd;
+            padding: 40px 20px;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .footer-content { max-width: 1000px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px; }
+        .footer-content h4 { color: white; margin-bottom: 15px; border-left: 3px solid var(--safety-orange); padding-left: 10px; }
+        .contact-item { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 10px; }
+        .contact-item i { color: var(--safety-orange); margin-top: 4px; }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        @media (max-width: 500px) {
+            .search-box { flex-direction: column; }
+            .info-row { flex-direction: column; }
         }
     </style>
 </head>
-<body class="bg-gray-100 flex items-center justify-center min-h-screen py-8 px-4 sm:px-6 lg:px-8">
+<body>
 
-<div class="container mx-auto">
-    <div class="card p-8 sm:p-12 text-center">
-        <!-- Header Section -->
-        <div class="mb-8">
-            <h1 class="text-3xl sm:text-4xl font-extrabold text-gray-900 mb-2">
-                LANIX SHIPPING AND INDUSTRIAL ACADEMY
-            </h1>
-            <p class="text-gray-600 text-lg">Certificate Verification System</p>
+<header>
+    <h1>Lanix Shipping & Industrial Academy</h1>
+    <p>Official Digital Verification System</p>
+</header>
+
+<div class="container">
+    <div class="card">
+        <div class="search-area">
+            <strong>Enter Certificate Number to Verify</strong>
+            <div class="search-box">
+                <input type="text" id="certInput" placeholder="LNX/SET-0325XXXX" value="LNX/SET-0325">
+                <button class="verify-btn" onclick="verifyCertificate()">VERIFY</button>
+            </div>
+            <p id="errorMsg" style="color:red; display:none; margin-top:15px; font-size:14px;">Record not found. Please verify the ID.</p>
         </div>
 
-        <!-- Verification Form Section -->
-        <div class="max-w-lg mx-auto">
-            <form id="verification-form" class="space-y-6">
-                <div>
-                    <label for="certificate-number" class="sr-only">Certificate Number</label>
-                    <input id="certificate-number" name="certificate-number" type="text" autocomplete="off" required
-                           class="w-full px-4 py-3 border border-gray-300 rounded-lg placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-lg transition duration-200"
-                           placeholder="Enter Certificate Number">
-                </div>
-                <div>
-                    <button type="submit"
-                            class="group relative w-full flex justify-center py-3 px-4 border border-transparent text-lg font-medium rounded-lg text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition duration-200">
-                        Verify Certificate
-                    </button>
-                </div>
-            </form>
-
-            <!-- Status and Result Section -->
-            <div id="status-message" class="mt-6 text-center text-gray-500 hidden">
-                <div class="spinner-border animate-spin inline-block w-8 h-8 rounded-full border-4 border-t-blue-500 border-gray-200"></div>
-                <p class="mt-2">Verifying...</p>
+        <div id="resultCard">
+            <div style="color:green; text-align:center; margin-bottom:20px; font-weight:bold;">
+                <i class="fas fa-check-circle"></i> Authenticated Record Found
             </div>
             
-            <div id="result-container" class="mt-6 hidden">
-                <!-- Result card will be inserted here by JavaScript -->
+            <div class="info-row">
+                <span class="label">Certificate ID:</span>
+                <span class="value" id="dispID"></span>
+            </div>
+            <div class="info-row">
+                <span class="label">Holder Name:</span>
+                <span class="value" id="dispName"></span>
+            </div>
+            <div class="info-row">
+                <span class="label">Course Name:</span>
+                <span class="value" id="dispCourse"></span>
+            </div>
+            <div class="info-row">
+                <span class="label">Date of Issue:</span>
+                <span class="value" id="dispDate"></span>
             </div>
 
-            <!-- Error/Warning message -->
-            <div id="alert-message" class="mt-6 hidden">
-                <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg relative" role="alert">
-                    <strong class="font-bold">Error!</strong>
-                    <span class="block sm:inline" id="alert-text"></span>
-                </div>
-            </div>
-        </div>
-
-        <!-- Footer Contact Information -->
-        <div class="mt-12 text-center text-gray-500">
-            <p class="text-sm">For more information, please contact:</p>
-            <p class="mt-1 text-base font-semibold">
-                Phone: 04561 240048, +91 9791713464
-            </p>
-            <p class="text-base font-semibold">
-                Email: lanix.institution@gmail.com
-            </p>
+            <a href="#" class="download-btn" id="dlLink" download>
+                <i class="fas fa-file-pdf"></i> DOWNLOAD CERTIFICATE 
+            </a>
         </div>
     </div>
 </div>
 
+<footer>
+    <div class="footer-content">
+        <div>
+            <h4>Contact Details</h4>
+            <div class="contact-item"><i class="fas fa-phone"></i> 04651 240048</div>
+            <div class="contact-item"><i class="fas fa-mobile-alt"></i> +91 97917 13464</div>
+            <div class="contact-item"><i class="fas fa-envelope"></i> lanix.institution@gmail.com</div>
+        </div>
+        <div>
+            <h4>Academy Address</h4>
+            <div class="contact-item">
+                <i class="fas fa-map-marker-alt"></i>
+                <span>RJ Plaza, Kirathoor, Kollemcode,<br>Tamilnadu, India 629160</span>
+            </div>
+        </div>
+    </div>
+    <div style="text-align:center; margin-top:30px; opacity:0.6; font-size:12px; border-top:1px solid #444; padding-top:20px;">
+        &copy; 2026 Lanix Shipping & Industrial Academy.
+    </div>
+</footer>
+
 <script>
-    document.addEventListener('DOMContentLoaded', () => {
-        const form = document.getElementById('verification-form');
-        const certificateInput = document.getElementById('certificate-number');
-        const statusMessage = document.getElementById('status-message');
-        const resultContainer = document.getElementById('result-container');
-        const alertMessage = document.getElementById('alert-message');
-        const alertText = document.getElementById('alert-text');
+    // Mock Database for demonstration
+    const data = {
+        "LNX/SET8-03651": {
+            name: "John Doe",
+            course: "6G SMAW Marine Welding",
+            date: "March 15, 2025",
+            file: "https://drive.google.com/file/d/1i1WICDw2cusxcbTMUNXN5rRVS6qeP1gZ/view?usp=sharing"
+        },
+        "LNX/SET7-56": {
+            name: "AUSTIN ALEX",
+            course: "GMAW 6G WELDING",
+            date: "June 19, 2024",
+            file: "cert_002.pdf"
+        },
+        "LNX/SET8-0313": {
+            name: "FRANKLIN SWEETEN KUMAR",
+            course: "SMAW 6G WELDING",
+            date: "April 28, 2025",
+            file: "cert_003.pdf"
+        },
+        "LNX/SET7-056": {
+            name: "FRANKLIN SWEETEN KUMAR",
+            course: "GMAW 6G WELDING",
+            date: "February 03, 2022",
+            file: "cert_004.pdf"
+        },
+        "LNX/SET8-0309": {
+            name: "FRANKLIN SWEETEN KUMAR",
+            course: "FABRICATION",
+            date: "June 12, 2025",
+            file: "cert_005.pdf"
+        },
+        "LNX/SET8-0310": {
+            name: "FRANKLIN SWEETEN KUMAR",
+            course: "OXY FUEL CUTTING",
+            date: "June 12, 2025",
+            file: "cert_006.pdf"
+        },
+        "LNX/SET7-55": {
+            name: "SREEJITH SREEKUMAR",
+            course: "GMAW 6G WELDING",
+            date: "February 05, 2022",
+            file: "cert_007.pdf"
+        },
+        "LNX/SET7/0302": {
+            name: "ABISHAKE KUMARADHAS",
+            course: "SMAW 6G WELDING",
+            date: "September 15, 2025",
+            file: "cert_008.pdf"
+        },
+        "LNX/SET7/0306": {
+            name: "ABISHAKE KUMARADHAS",
+            course: "GMAW 6G WELDING",
+            date: "October 14, 2024",
+            file: "cert_009.pdf"
+        },
+        "LNX/SET7/0305": {
+            name:"KONSHAKA STALIN",
+            course: "SMAW 6G MARINE WELDING",
+            date: "October 28, 2024",
+            file: "cert_010.pdf"
+        },
+        "LNX/SET7-0307": {
+            name:"JENEFER RAJ",
+            course: "SMAW 6G WELDING",
+            date: "December 12, 2024",
+            file: "cert_011.pdf"
+        },
+        "LNX/SET7-0308": {
+            name:"JENEFER RAJ",
+            course: "GMAW 6G WELDING",
+            date: "January 22, 2025",
+            file: "cert_012.pdf"
+        },
+        "LNX/SET7-0309": {
+            name:"JENEFER RAJ",
+            course: "GTAW 6G WELDING",
+            date: "June 26, 2025",
+            file: "cert_013.pdf"
+        },
+        "LNX/SET7-0311": {
+            name:"VIPIN LAWRANCE",
+            course: "SMAW 6G WELDING",
+            date: "March 28, 2025",
+            file: "cert_014.pdf"
+        },
+        "LNX/SET8-0312": {
+            name:"JEKATHEESH KUMAR",
+            course: "GMAW 6G WELDING",
+            date: "May 30, 2025",
+            file: "cert_015.pdf"
+        },
+        "LNX/SET8/0312": {
+            name:"XAVIER VINCENT",
+            course: "SMAW 6G MARINE WELDING",
+            date: "April 24, 2025",
+            file: "cert_016.pdf"
+        },
+        "LNX/SET8-03013": {
+            name:"IMMANUVEL GONSALVES",
+            course: "FABRICATION",
+            date: "June 12, 2025",
+            file: "cert_017.pdf"
+        },
+        "LNX/SET8-0314": {
+            name:"IMMANUVEL GONSALVES",
+            course: "OXY FUEL CUTTING",
+            date: "June 12, 2025",
+            file: "cert_018.pdf"
+        },
+        "LNX/SET8-0315": {
+            name:"STEPHEN DEZON",
+            course: "SMAW 6G MARINE WELDING",
+            date: "May 03, 2025",
+            file: "cert_019.pdf"
+        },
+        "LNX/SET8-0316": {
+            name:"CHRISTAN CHRISTOPHER",
+            course: "SMAW 6G MARINE WELDING",
+            date: "July 01, 2025",
+            file: "cert_020.pdf"
+        },
+        "LNX/SET8-0317": {
+            name:"CHRISTAN CHRISTOPHER",
+            course: "FABRICATION",
+            date: "June 12, 2025",
+            file: "cert_021.pdf"
+        },
+        "LNX/SET8-0318": {
+            name:"CHRISTAN CHRISTOPHER",
+            course: "OXY FUEL CUTTING",
+            date: "June 12, 2025",
+            file: "cert_022.pdf"
+        },
+        "LNX/SET8-0319": {
+            name:"STEPHEN DEZON",
+            course: "OXY FUEL CUTTING",
+            date: "June 12, 2025",
+            file: "cert_023.pdf"
+        },
+        "LNX/SET8-0320": {
+            name:"AJEESH AUGUSTIN",
+            course: "SMAW 6G MARINE WELDING",
+            date: "July 01, 2025",
+            file: "cert_024.pdf"
+        },
+        "LNX/SET8-0321": {
+            name:"AJEESH AUGUSTIN",
+            course: "FABRICATION",
+            date: "June 12, 2025",
+            file: "cert_025.pdf"
+        },
+        "LNX/SET8-0322": {
+            name:"AJEESH AUGUSTIN",
+            course: "OXY FUEL CUTTING",
+            date: "June 12, 2025",
+            file: "cert_026.pdf"
+        },
+        "LNX/SET8-0323": {
+            name:"STEPHEN DEZON",
+            course: "FABRICATION",
+            date: "June 28, 2025",
+            file: "cert_027.pdf"
+        },
+        "LNX/SET8-0324": {
+            name:"BIJIN MARIYA BINU",
+            course: "SMAW 6G MARINE WELDING",
+            date: "July 02, 2025",
+            file: "cert_028.pdf"
+        },
+        "LNX/SET8-0325": {
+            name:"BIJIN MARIYA BINU",
+            course: "GMAW 6G WELDING",
+            date: "July 07, 2025",
+            file: "cert_029.pdf"
+        },
+        "LNX/SET8-0326": {
+            name:"BIJIN MARIYA BINU",
+            course: "OXY FUEL CUTTING",
+            date: "July 18, 2025",
+            file: "cert_030.pdf"
+        },
+        "LNX/SET7-0286": {
+            name:"BIJIN MARIYA BINU",
+            course: "FABRICATION",
+            date: "September 08, 2023",
+            file: "cert_031.pdf"
+        },
+        "LNX/SET7-0289": {
+            name:"JAISH KUMAR",
+            course: "SMAW 6G MARINE WELDING",
+            date: "August 21, 2025",
+            file: "cert_032.pdf"
+        },
+        "LNX/SET8-0328": {
+            name:"IMMANUVEL GONSALVES",
+            course: "SMAW 6G MARINE WELDING",
+            date: "August 19, 2025",
+            file: "cert_033.pdf"
+        },
+        "LNX/SET8-0329": {
+            name:"ARJALA RAMA A A RAO",
+            course: "SMAW 6G MARINE WELDING",
+            date: "September 05, 2025",
+            file: "cert_034.pdf"
+        },
+        "LNX/SET8/0330": {
+            name:"VIJU RAMMYYAN",
+            course: "SMAW 6G WELDING",
+            date: "November 13, 2025",
+            file: "cert_035.pdf"
+        },
+        "LNX/SET8/0331": {
+            name:"VIJU ALEX BRITTO",
+            course: "GMAW 6G WELDING",
+            date: "November 15, 2025",
+            file: "cert_036.pdf"
+        },
+        "LNX/SET8/0333": {
+            name:"NITHIN",
+            course: "OXY FUEL CUTTING",
+            date: "December 10, 2025",
+            file: "cert_037.pdf"
+        },
+        "LNX/SET8/0334": {
+            name:"VIJU ALEX BRITTO",
+            course: "GTAW 6G WELDING",
+            date: "December 29, 2025",
+            file: "cert_038.pdf"
+        },
+        "LNX/SET9/0337": {
+            name:"RAGUL.P",
+            course: "OXY FUEL CUTTING",
+            date: "January 08, 2026",
+            file: "cert_039.pdf"
+        },
+        "LNX/SET9/0336": {
+            name:"POOVARASAN",
+            course: "OXY FUEL CUTTING",
+            date: "January 08, 2026",
+            file: "cert_040.pdf"
+        },
+        "LNX/SET9/0338": {
+            name:"RIJO A",
+            course: "OXY FUEL CUTTING",
+            date: "January 08, 2026",
+            file: "cert_041.pdf"
+        },
+         "LNX/SET8-03652": {
+            name: " Nill",
+            course: "Nill",
+            date: "March 15, 2025",
+            file: "cert_0100.pdf"
+        },
+        "LNX/SET7-": {
+            name: "Nill",
+            course: "Nill",
+            date: "April 02, 2025",
+            file: "cert_00.pdf"
+        }
+    };
 
-        // Hardcoded list of valid certificates for demonstration purposes
-        const validCertificates = [
-            { id: 'LNX/SET7-275', name: 'SWEETEN KUMAR', course: 'SMAW 6G', date: '23-09-2022' },
-            { id: 'LNX/SET8-0309', name: 'SWEETEN KUMAR', course: 'FABRICATION', date: '12-06-2025' },
-            { id: 'LNX/SET8-0310', name: 'SWEETEN KUMAR', course: 'OXY-Fuel Cutting', date: '12-06-2025' },
-            { id: 'LNX/SET8-0313', name: 'SWEETEN KUMAR', course: 'SMAW 6G MARINE WELDING', date: '28-04-2025' },
-            { id: 'LNX/SET7-56', name: 'AUSTIN ALEX', course: 'GMAW 6G', date: '19-06-2024' },
-            { id: 'LNX/SET7-55', name: 'SREEJITH KUMAR', course: 'GMAW 6G', date: '02-05-2022' },
-            { id: 'LNX/SET8-0325', name: 'BIJIN MARIYA BINU', course: 'GMAW 6G', date: '07-07-2025' },
-            { id: 'LNX/SET8-0324', name: 'BIJIN MARIYA BINU', course: 'SMAW 6G MARINE WELDING', date: '02-07-2025' },
-            { id: 'LNX/SET7-0326', name: 'BIJIN MARIYA BINU', course: 'OXY-Fuel Cutting', date: '18-07-2025' },
-            { id: 'LNX/SET7-0286', name: 'BIJIN MARIYA BINU', course: 'METAL FABRICATION', date: '08-09-2023' },
-            { id: 'LNX/SET7-56', name: 'AUSTIN ALEX', course: 'GMAW 6G', date: '19-06-2024' },
-            { id: 'LNX/SET7/0302', name: 'ABISHAKE KUMARADHAS', course: 'SMAW 6G', date: '15-09-2024' },
-            { id: 'LNX/SET7/0306', name: 'ABISHAKE KUMARADHAS', course: 'GMAW 6G', date: '14-10-2024' },
-            { id: 'LNX/SET7/0305', name: 'KONSHAKA STALIN', course: 'SMAW 6G', date: '28-10-2024' },
-            { id: 'LNX/SET7-0307', name: 'JENEFER RAJ', course: 'SMAW 6G', date: '12-12-2024' },
-            { id: 'LNX/SET7-0308', name: 'JENEFER RAJ', course: 'GMAW 6G', date: '22-01-2025' },
-            { id: 'LNX/SET7-0309', name: 'JENEFER RAJ', course: 'GTAW 6G', date: '26-06-2025' },
-            { id: 'LNX/SET7-0311', name: 'VIPIN LAWRANCE', course: 'SMAW 6G', date: '28-03-2025' },
-            { id: 'LNX/SET7-0312', name: 'JEKATHEESH', course: 'GMAW 6G', date: '30-05-2025' },
-            { id: 'LNX/SET8/0312', name: 'XAVIER VINCENT', course: 'SMAW 6G MARINE WELDING', date: '24-04-2025' },
-            { id: 'LNX/SET8-03013', name: 'IMMANUAL', course: 'METAL FABRICATION', date: '12-06-2025' },
-            { id: 'LNX/SET8-0314', name: 'IMMANUAL', course: 'OXY-Fuel Cutting', date: '12-06-2025' },
-            { id: 'LNX/SET8-0315', name: 'STEPHEN DEZON', course: 'SMAW 6G MARINE WELDING', date: '03-05-2025' },
-            { id: 'LNX/SET8-0316', name: 'CHRISTAN', course: 'SMAW 6G MARINE WELDING', date: '01-07-2025' },
-            { id: 'LNX/SET8-0317', name: 'CHRISTAN', course: 'METAL FABRICATION', date: '12-06-2025' },
-            { id: 'LNX/SET8-0318', name: 'CHRISTAN', course: 'OXY-Fuel Cutting', date: '12-06-2025' },
-            { id: 'LNX/SET8-0319', name: 'STEPHEN DEZON', course: 'OXY-Fuel Cutting', date: '12-06-2025' },
-            { id: 'LNX/SET8-0320', name: 'AJEESH AUGUSTIN', course: 'SMAW 6G MARINE WELDING', date: '01-07-2025' },
-            { id: 'LNX/SET8-0321', name: 'AJEESH AUGUSTIN', course: 'METAL FABRICATION', date: '12-06-2025' },
-            { id: 'LNX/SET8-0322', name: 'AJEESH AUGUSTIN', course: 'OXY-Fuel Cutting', date: '12-06-2025' },
-            { id: 'LNX/SET7-0289', name: 'JAISH KUMAR', course: 'SMAW 6G MARINE WELDING', date: '21-08-2025' },
-            { id: 'LNX/SET8-0328', name: 'IMMANUAL', course: 'SMAW 6G MARINE WELDING', date: '19-08-2025' },
-            { id: 'LNX/SET8-0329', name: 'ARJALA RAMA A A RAO', course: 'SMAW 6G MARINE WELDING', date: '05-09-2025' },
-            { id: 'LNX/SET8/0330', name: 'VIJU RAMAYYAN', course: 'SMAW STRUCTURAL WELDING', date: '13-11-2025' },
-            { id: 'LNX/SET8/0331', name: 'VIJU ALEX BRITTO', course: 'GMAW 4G WELDING', date: '15-11-2025' },
-            { id: 'LNX/SET8/0334', name: 'VIJU ALEX BRITTO', course: 'STAW 6G WELDING', date: '29-12-2025' },
-            { id: 'LNX/SET8/0333', name: 'NITHIN', course: 'OXY-Fuel Cutting', date: '10-12-2025' },
-            { id: 'LNX/SET9/0337', name: 'RAGUL . P', course: 'OXY-Fuel Cutting', date: '08-01-2026' },
-            { id: 'LNX/SET9/0336', name: 'POOVARASAN', course: 'OXY-Fuel Cutting', date: '08-01-2026' },
-            { id: 'LNX/SET9/0338', name: 'RIJO A', course: 'OXY-Fuel Cutting', date: '08-01-2026' },
-        ];
+    function verifyCertificate() {
+        const id = document.getElementById('certInput').value.trim().toUpperCase();
+        const resCard = document.getElementById('resultCard');
+        const err = document.getElementById('errorMsg');
 
-        form.addEventListener('submit', (e) => {
-            e.preventDefault();
-            
-            // Reset UI states
-            resultContainer.classList.add('hidden');
-            alertMessage.classList.add('hidden');
-            statusMessage.classList.remove('hidden');
-
-            const certNumber = certificateInput.value.trim().toUpperCase();
-            
-            if (certNumber === '') {
-                statusMessage.classList.add('hidden');
-                alertText.textContent = 'Please enter a certificate number.';
-                alertMessage.classList.remove('hidden');
-                return;
-            }
-
-            // Simulate a server request with a delay
-            setTimeout(() => {
-                const certificate = validCertificates.find(cert => cert.id === certNumber);
-                
-                statusMessage.classList.add('hidden');
-
-                if (certificate) {
-                    const resultCard = `
-                        <div class="bg-green-50 p-6 rounded-xl border-2 border-green-200">
-                            <h2 class="text-2xl font-bold text-green-700 mb-4 text-center">Certificate Found!</h2>
-                            <div class="text-left text-gray-700 space-y-2">
-                                <p><strong class="font-semibold text-gray-900">Certificate ID:</strong> ${certificate.id}</p>
-                                <p><strong class="font-semibold text-gray-900">Holder Name:</strong> ${certificate.name}</p>
-                                <p><strong class="font-semibold text-gray-900">Course:</strong> ${certificate.course}</p>
-                                <p><strong class="font-semibold text-gray-900">Completion Date:</strong> ${certificate.date}</p>
-                            </div>
-                        </div>
-                    `;
-                    resultContainer.innerHTML = resultCard;
-                    resultContainer.classList.remove('hidden');
-                } else {
-                    const resultCard = `
-                        <div class="bg-red-50 p-6 rounded-xl border-2 border-red-200">
-                            <h2 class="text-2xl font-bold text-red-700 mb-4 text-center">Certificate Not Found</h2>
-                            <p class="text-center text-gray-700">The certificate number you entered is not valid. Please check the number and try again.</p>
-                        </div>
-                    `;
-                    resultContainer.innerHTML = resultCard;
-                    resultContainer.classList.remove('hidden');
-                }
-            }, 1500); // 1.5 second delay to simulate network latency
-        });
-    });
+        if (data[id]) {
+            err.style.display = "none";
+            document.getElementById('dispID').innerText = id;
+            document.getElementById('dispName').innerText = data[id].name;
+            document.getElementById('dispCourse').innerText = data[id].course;
+            document.getElementById('dispDate').innerText = data[id].date;
+            document.getElementById('dlLink').href = data[id].file;
+            resCard.style.display = "block";
+        } else {
+            resCard.style.display = "none";
+            err.style.display = "block";
+        }
+    }
 </script>
 
 </body>
-
 </html>
-
-
-
-
-
-
-
-
-
-
