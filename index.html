@@ -171,14 +171,6 @@
                 <span class="label">Date of Issue:</span>
                 <span class="value" id="dispDate"></span>
             </div>
-            <div class="info-row">
-    <span class="label">Expiry Date:</span>
-    <span class="value" id="dispExpiry"></span>
-</div>
-<div class="info-row">
-    <span class="label">Status:</span>
-    <span class="value" id="dispStatus"></span>
-</div>
 
             <a href="#" class="download-btn" id="dlLink" download>
                 <i class="fas fa-file-pdf"></i> DOWNLOAD CERTIFICATE 
@@ -214,7 +206,7 @@
         "LNX/SET8-03651": {
             name: "John Doe",
             course: "6G SMAW Marine Welding",
-            date: "March 15, 2023",
+            date: "March 15, 2025",
             file: "https://drive.google.com/file/d/1i1WICDw2cusxcbTMUNXN5rRVS6qeP1gZ/view?usp=sharing"
         },
         "LNX/SET7-56": {
@@ -472,47 +464,25 @@
     };
 
     function verifyCertificate() {
+        const id = document.getElementById('certInput').value.trim().toUpperCase();
+        const resCard = document.getElementById('resultCard');
+        const err = document.getElementById('errorMsg');
 
-    let id = document.getElementById("certInput").value.toUpperCase();
-    let record = data[id];
-
-    if (!record) {
-        document.getElementById("errorMsg").style.display = "block";
-        document.getElementById("resultCard").style.display = "none";
-        return;
+        if (data[id]) {
+            err.style.display = "none";
+            document.getElementById('dispID').innerText = id;
+            document.getElementById('dispName').innerText = data[id].name;
+            document.getElementById('dispCourse').innerText = data[id].course;
+            document.getElementById('dispDate').innerText = data[id].date;
+            document.getElementById('dlLink').href = data[id].file;
+            resCard.style.display = "block";
+        } else {
+            resCard.style.display = "none";
+            err.style.display = "block";
+        }
     }
-
-    document.getElementById("errorMsg").style.display = "none";
-    document.getElementById("resultCard").style.display = "block";
-
-    document.getElementById("dispID").innerText = id;
-    document.getElementById("dispName").innerText = record.name;
-    document.getElementById("dispCourse").innerText = record.course;
-    document.getElementById("dispDate").innerText = record.date;
-    document.getElementById("dlLink").href = record.file;
-
-    // Calculate expiry date
-    let issueDate = new Date(record.date);
-    let expiryDate = new Date(issueDate);
-    expiryDate.setFullYear(expiryDate.getFullYear() + 2);
-
-    let options = { year: 'numeric', month: 'long', day: 'numeric' };
-    document.getElementById("dispExpiry").innerText =
-        expiryDate.toLocaleDateString(undefined, options);
-
-    // Check status
-    let today = new Date();
-    let status = document.getElementById("dispStatus");
-
-    if (today > expiryDate) {
-        status.innerHTML = "🔴 EXPIRED";
-        status.style.color = "red";
-    } else {
-        status.innerHTML = "🟢 VALID";
-        status.style.color = "green";
-    }
-}
 </script>
 
 </body>
 </html>
+
